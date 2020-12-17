@@ -1,13 +1,18 @@
-import bulmaCarousel from 'bulma-carousel';
+import Swiper, { Navigation, Pagination } from 'swiper';
+Swiper.use([Navigation, Pagination]);
 
 document.addEventListener('turbolinks:load', function(){
-  let element = document.querySelector('#carousel')
-  if(element){
-    bulmaCarousel.attach('#carousel', {
-      slidesToScroll: 1,
-      slidesToShow: 3,
-      infinite: true,
-      autoplay: true
-    })
-  }
-});
+  var mySwiper = new Swiper('.swiper-container', {
+    slidesPerView: 3,
+    loop: true,
+    pagination: {
+      el: '.swiper-pagination.index',
+      clickable: true
+    },
+    navigation: {
+      nextEl: '.swiper-button-next',
+      prevEl: '.swiper-button-prev',
+    },
+  })
+
+})
