@@ -12,9 +12,10 @@
   </head>
 
   <body>
-
+    <%= render 'shared/notice' if notice %>
     <%= render 'shared/frontend/navbar' %>
     <%= render 'shared/frontend/tab_menu' %>
+    
     <%= yield %>
     <%= render 'shared/frontend/footer' %>
   </body>
