@@ -11,6 +11,7 @@ gem 'devise', '~> 4.7', '>= 4.7.1'
 gem 'omniauth-google-oauth2', '~> 0.8.1'
 gem 'figaro', '~> 1.2'
 gem 'paranoia', '~> 2.1', '>= 2.1.5'
+gem 'friendly_id', '~> 5.4', '>= 5.4.1'
 # Use Puma as the app server
 gem 'puma', '~> 5.0'
 # Use SCSS for stylesheets
