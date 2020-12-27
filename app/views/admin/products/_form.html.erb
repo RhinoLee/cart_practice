@@ -36,6 +36,34 @@
     <%= form.label :on_sell, '是否上架？', class: 'checkbox' %>
   </div>
 
+  <div class="description">
+    <%= form.label :description, '商品描述', class: 'label' %>
+    <%= form.rich_text_area :description %>
+  </div>
+
+  <hr>
+
+  <h3>庫存項目</h3>
+  <div id="sku_form">
+
+    <template class="sku_child">
+      <%= form.fields_for :skus, Sku.new, child_index: 'NEW_RECORD' do |sku| %>
+        <%= render 'sku_fields', form: sku %>
+      <% end %>
+    </template>
+
+    <%= form.fields_for :skus do |sku_form| %>
+      <%= render 'sku_fields', form: sku_form %>
+    <% end %>
+
+    <div class="add-item-button">
+      <%= link_to '新增品項', '#', class: 'button is-light is-small' %>
+    </div>
+  </div>
+  
+  
+  
+
   <%= form.submit class: 'button is-primary is-medium' %>
 <% end %>
 
