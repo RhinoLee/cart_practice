@@ -12,6 +12,7 @@ gem 'omniauth-google-oauth2', '~> 0.8.1'
 gem 'figaro', '~> 1.2'
 gem 'paranoia', '~> 2.1', '>= 2.1.5'
 gem 'friendly_id', '~> 5.4', '>= 5.4.1'
+gem 'acts_as_list', '~> 1.0', '>= 1.0.3'
 # Use Puma as the app server
 gem 'puma', '~> 5.0'
 # Use SCSS for stylesheets
@@ -26,7 +27,7 @@ gem 'jbuilder', '~> 2.7'
 # gem 'bcrypt', '~> 3.1', '>= 3.1.16'
 
 # Use Active Storage variant
-# gem 'image_processing', '~> 1.2'
+gem 'image_processing', '~> 1.2'
 
 
 # Reduces boot times through caching; required in config/boot.rb

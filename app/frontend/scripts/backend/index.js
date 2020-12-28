@@ -1,3 +1,4 @@
 
 import './application.js'
-import '../backend/sku_form_controller.js'
+import './sku_form_controller.js'
+import './sortable.js'
