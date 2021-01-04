@@ -4,7 +4,7 @@
     
     <div class="columns is-multiline">
       <% if products %>
-        <%= products.each do |product| %>
+        <% products.each do |product| %>
           <div class="column is-4">
             <div class="card product-item is-shadowless">
               <%= link_to product_path(product) do %>

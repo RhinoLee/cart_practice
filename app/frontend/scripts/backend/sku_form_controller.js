@@ -1,6 +1,6 @@
 document.addEventListener('turbolinks:load', function(){
 
-  const addItemButton = document.querySelector('.add-item-button')
+  const addItemButton = document.querySelector('.add-item-button') || ''
   const skuChildForm = document.querySelector('.sku_child')
   const content = skuChildForm ? skuChildForm.innerHTML.replace(/NEW_RECORD/g, new Date().getTime()) : ''
 
