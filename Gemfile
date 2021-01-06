@@ -67,4 +67,5 @@ group :development, :test do
   gem 'factory_bot_rails', '~> 5.1', '>= 5.1.1'
   gem 'faker', '~> 2.11'
   gem 'pry-rails', '~> 0.3.9'
+  gem 'timecop', '~> 0.9.2'
 end
