@@ -9,6 +9,7 @@ document.addEventListener('turbolinks:load', function(){
     const submitBtn = document.querySelector('#product-data #add-to-cart')
     const quantityInput = document.querySelector('#product-data input[name=quantity]')
     const skuInput = document.querySelector('#product-data #product-item')
+    const showCartItemsCount = document.querySelector('span#cart-item-count')
     
     amountBtn.forEach(btn => {
       btn.addEventListener('click', function(e){
@@ -42,15 +43,23 @@ document.addEventListener('turbolinks:load', function(){
         data.append("sku", sku)
 
         Rails.ajax({
-          url: '/api/test',
+          url: '/api/v1/cart',
           data,
           type: 'POST',
           dataType: 'json',
           success: res => {
-            console.log(res);
+            if( res.status === 'ok'){
+              let item_count = res.items || 0
+              // showCartItemsCount.innerText = `(${item_count})`
+              let event = new CustomEvent('addToCart', { 'detail': { item_count } })
+              document.dispatchEvent(event)
+            }
           },
           error: err => {
             console.log(err);
+          },
+          complete: () => {
+            submitBtn.classList.remove('is-loading')
           }
         })
       }
