@@ -22,7 +22,7 @@
       </article>
     </div>
 
-    <div class="column is-5">
+    <div class="column is-5" data-product_id="<%= @product.code %>" id="product-data">
       <h3 class="has-text-grey-light"><%= @product.vendor.title %></h3>
       <h2 class="title is-4"><%= @product.name %></h2>
       <p class="has-text-primary is-size-4">
@@ -30,34 +30,38 @@
         <span>原價：<%= @product.list_price %></span>
       </p>
       <hr>
-      <div class="columns">
-        <div class="column is-3 is-size-4 has-text-right">數量</div>
-        <div class="column is-9 field is-grouped">
-          <a href="#" class="button is-white is-medium">-</a>
-          <input type="number" name="quantity" class="input is-medium has-text-centered" value="1">
-          <a href="#" class="button is-white is-medium">+</a>
-        </div>
-      </div>
-      
+
       <% if @product.skus.any? %>
-        
-          <div class="field">
+        <div class="field">
+          <div class="columns">
             <div class="column is-3 is-size-4 has-text-right">品項</div>
             <div class="column is-9 field is-grouped">
               <div class="select is-fullwidth is-medium">
-                <select>
+                <select id="product-item">
                   <%= options_for_select(@product.skus.map { |sku| [sku.spec, sku.id] }) %>
                 </select>
               </div>
             </div>
           </div>
+        </div>
         
       <% end %>
+
+      <div class="columns">
+        <div class="column is-3 is-size-4 has-text-right">數量</div>
+        <div class="column is-9 field is-grouped">
+          <a href="#" class="button is-white is-medium quantity decrease">-</a>
+          <input type="number" name="quantity" class="input is-medium has-text-centered" value="1">
+          <a href="#" class="button is-white is-medium quantity increase">+</a>
+        </div>
+      </div>
+      
+      
 
       
     
       
-      <a href="#" class="button is-primary is-medium is-fullwidth">加到購物車</a>
+      <a href="#" id="add-to-cart" class="button is-primary is-medium is-fullwidth">加到購物車</a>
     </div>
   </div>
   
