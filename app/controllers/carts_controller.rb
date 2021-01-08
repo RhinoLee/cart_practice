@@ -9,4 +9,7 @@ class CartsController < ApplicationController
     redirect_to root_path, notice: '購物車以清空'
   end
 
+  def checkout 
+  end
+
 end
