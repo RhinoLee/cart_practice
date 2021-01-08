@@ -7,5 +7,15 @@ FactoryBot.define do
 
     vendor
     category
+
+    trait :with_skus do 
+      transient do 
+        amount { 2 }
+      end
+      skus { build_list :sku, amount }
+    end
   end
 end
+
+
+# FactoryBot.create(:product, :with_skus, amount: 5)

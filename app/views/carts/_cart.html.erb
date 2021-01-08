@@ -11,14 +11,15 @@
         <th>小計</th>
       </tr>
     </thead>
+    
     <tbody>
       <% current_cart.items.each do |item| %>
-        <tr>
-          <td><%= item.product.name %></td>
-          <td><%= item.product.sell_price %></td>
-          <td><%= item.quantity %></td>
-          <td><%= item.total_price %></td>
-        </tr>
+      <tr>
+        <td><%= item.product.name %></td>
+        <td><%= item.product.sell_price %></td>
+        <td><%= item.quantity %></td>
+        <td><%= item.total_price %></td>
+      </tr>
       <% end %>
     </tbody>
     <tfoot>
@@ -29,3 +30,8 @@
     </tfoot>
   </table>
 <% end %>
+
+
+
+
+
