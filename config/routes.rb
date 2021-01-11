@@ -15,6 +15,11 @@ Rails.application.routes.draw do
     collection do 
       get :confirm
     end
+
+    member do 
+      delete :cancel
+      post :pay
+    end
   end
 
   namespace :admin do 
