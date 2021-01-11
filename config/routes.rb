@@ -19,6 +19,7 @@ Rails.application.routes.draw do
     member do 
       delete :cancel
       post :pay
+      get :pay_confirm
     end
   end
 
