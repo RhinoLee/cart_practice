@@ -6,7 +6,7 @@ class OrdersController < ApplicationController
   end
 
   def create     
-
+    
     @order = current_user.orders.build(order_params)
 
     current_cart.items.each do |item|
@@ -14,24 +14,17 @@ class OrdersController < ApplicationController
     end
 
     if @order.save
-      resp = Faraday.post("#{ENV['line_pay_endpoint']}/v2/payments/request") do |req|
-        req.headers['Content-Type'] = 'application/json'
-        req.headers['X-LINE-ChannelId'] = ENV['line_pay_channel_id']
-        req.headers['X-LINE-ChannelSecret'] = ENV['line_pay_channel_secret']
-        req.body = {
-          productName: "大滷蛋",
-          amount: current_cart.cart_total_price.to_i,
-          currency: "TWD",
-          confirmUrl: "http://localhost:3000/orders/confirm",
-          orderId: @order.num
-        }.to_json
-      end
-      
-      result = JSON.parse(resp.body) 
+      service = LinepayService.new('payments/request')
+      service.perform({
+        productName: "大滷蛋",
+        amount: current_cart.cart_total_price.to_i,
+        currency: "TWD",
+        confirmUrl: "http://localhost:3000/orders/confirm",
+        orderId: @order.num
+      })
 
-      if result["returnCode"] == "0000"
-        payment_url = result["info"]["paymentUrl"]["web"]
-        redirect_to payment_url
+      if service.is_success? 
+        redirect_to service.payment_url
       else
         flash[:notice] = '付款發生錯誤'
         render 'carts/checkout'
@@ -44,23 +37,16 @@ class OrdersController < ApplicationController
 
 
   def confirm 
-    id = params[:transactionId]
+    service = LinepayService.new("payments/#{params[:transactionId]}/confirm")
+    service.perform({
+      amount: current_cart.cart_total_price.to_i,
+      currency: "TWD",
+    })
 
-    resp = Faraday.post("#{ENV['line_pay_endpoint']}/v2/payments/#{id}/confirm") do |req|
-      req.headers['Content-Type'] = 'application/json'
-      req.headers['X-LINE-ChannelId'] = ENV['line_pay_channel_id']
-      req.headers['X-LINE-ChannelSecret'] = ENV['line_pay_channel_secret']
-      req.body = {
-        amount: current_cart.cart_total_price.to_i,
-        currency: "TWD",
-      }.to_json
-    end
-
-    result = JSON.parse(resp.body) 
-
-    if result["returnCode"] == "0000"
-      order_id = result["info"]["orderID"]
-      transaction_id = result["info"]["transactionId"]
+    if service.is_success? 
+      order_id = service.order_id
+      p order_id
+      transaction_id = params[:transactionId]
 
       order = current_user.orders.find_by(num: order_id)
       order.pay!(transaction_id: transaction_id)
@@ -78,17 +64,10 @@ class OrdersController < ApplicationController
     @order = current_user.orders.find(params[:id])
 
     if @order.paid?
-      id = @order.transaction_id
+      service = LinepayService.new("payments/#{@order.transaction_id}/refund")
+      service.perform({})
 
-      resp = Faraday.post("#{ENV['line_pay_endpoint']}/v2/payments/#{id}/refund") do |req|
-        req.headers['Content-Type'] = 'application/json'
-        req.headers['X-LINE-ChannelId'] = ENV['line_pay_channel_id']
-        req.headers['X-LINE-ChannelSecret'] = ENV['line_pay_channel_secret']
-      end
-
-      result = JSON.parse(resp.body) 
-      
-      if result["returnCode"] == "0000"
+      if service.is_success? 
         @order.cancel!
         redirect_to orders_path, notice: "訂單 #{@order.num} 已取消，並完成退款"
       else
@@ -105,23 +84,17 @@ class OrdersController < ApplicationController
   def pay 
     @order = current_user.orders.find(params[:id])
 
-    resp = Faraday.post("#{ENV['line_pay_endpoint']}/v2/payments/request") do |req|
-      req.headers['Content-Type'] = 'application/json'
-      req.headers['X-LINE-ChannelId'] = ENV['line_pay_channel_id']
-      req.headers['X-LINE-ChannelSecret'] = ENV['line_pay_channel_secret']
-      req.body = {
-        productName: "大滷蛋",
-        amount: @order.total_price.to_i,
-        currency: "TWD",
-        confirmUrl: "http://localhost:3000/orders/#{@order.id}/pay_confirm",
-        orderId: @order.num
-      }.to_json
-    end
+    service = LinepayService.new("payments/request")
+    service.perform({
+      productName: "大滷蛋",
+      amount: @order.total_price.to_i,
+      currency: "TWD",
+      confirmUrl: "http://localhost:3000/orders/#{@order.id}/pay_confirm",
+      orderId: @order.num
+    })
 
-    result = JSON.parse(resp.body) 
-
-    if result["returnCode"] == "0000"
-      payment_url = result["info"]["paymentUrl"]["web"]
+    if service.is_success? 
+      payment_url = service.payment_url
       redirect_to payment_url
     else
       redirect_to orders_path, notice: '付款發生錯誤'
@@ -132,22 +105,14 @@ class OrdersController < ApplicationController
   def pay_confirm 
     @order = current_user.orders.find(params[:id])
 
-    id = params[:transactionId]
+    service = LinepayService.new("payments/#{params[:transactionId]}/confirm")
+    service.perform({
+      amount: @order.total_price.to_i,
+      currency: "TWD",
+    })
 
-    resp = Faraday.post("#{ENV['line_pay_endpoint']}/v2/payments/#{id}/confirm") do |req|
-      req.headers['Content-Type'] = 'application/json'
-      req.headers['X-LINE-ChannelId'] = ENV['line_pay_channel_id']
-      req.headers['X-LINE-ChannelSecret'] = ENV['line_pay_channel_secret']
-      req.body = {
-        amount: @order.total_price.to_i,
-        currency: "TWD",
-      }.to_json
-    end
-
-    result = JSON.parse(resp.body) 
-
-    if result["returnCode"] == "0000"
-      transaction_id = result["info"]["transactionId"]
+    if service.is_success? 
+      transaction_id = service.transaction_id
 
       @order.pay!(transaction_id: transaction_id)
 
