@@ -13,6 +13,8 @@ gem 'figaro', '~> 1.2'
 gem 'paranoia', '~> 2.1', '>= 2.1.5'
 gem 'friendly_id', '~> 5.4', '>= 5.4.1'
 gem 'acts_as_list', '~> 1.0', '>= 1.0.3'
+gem 'faraday', '~> 1.3'
+gem 'aasm', '~> 5.1', '>= 5.1.1'
 # Use Puma as the app server
 gem 'puma', '~> 5.0'
 # Use SCSS for stylesheets

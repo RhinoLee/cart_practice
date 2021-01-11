@@ -1,6 +1,10 @@
 google_app_id: 'your-app-id'
 goolge_app_secrect: 'your-app-secrect'
 
+line_pay_channel_id: 'your-channel-id',
+line_pay_channel_secret: 'your-channel-secrect-key'
+line_pay_endpoint: 'https://sandbox-api-pay.line.me'
+
 # production:
 #   stripe_api_key: sk_live_EeHnL644i6zo4Iyq4v1KdV9H
 #   stripe_publishable_key: pk_live_9lcthxpSIHbGwmdO941O1XVU
